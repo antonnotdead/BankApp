@@ -1,6 +1,7 @@
 package com.clevertecbank.entity;
 
 import lombok.*;
+
 @Setter
 @Getter
 @NoArgsConstructor
@@ -8,10 +9,8 @@ import lombok.*;
 @Builder
 @ToString
 @EqualsAndHashCode
-public class User {
+public class Currency {
     @EqualsAndHashCode.Exclude
     private long id;
-    private String name;
-    private String surname;
-    private String patronymic;
+    private String code;
 }
