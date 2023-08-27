@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,6 +51,25 @@ public class UserDAO implements DAO<User>{
 
     @Override
     public List<User> getAll() {
+        List<User>  userList = new ArrayList<>();
+        try(Connection connection = DBCONNECTOR.getConnection()) {
+            String query = "SELECT * FROM bankapp.user_data";
+            try (PreparedStatement statement = connection.prepareStatement(query)){
+                try (ResultSet resultSet = statement.executeQuery()){
+                    while (resultSet.next()){
+                        User user = User.builder().id(resultSet.getLong("id"))
+                                .name(resultSet.getString("name"))
+                                .surname(resultSet.getString("surname"))
+                                .patronymic(resultSet.getString("patronymic"))
+                                .build();
+                        userList.add(user);
+                    }
+                }
+
+            }
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
         return null;
     }
 
