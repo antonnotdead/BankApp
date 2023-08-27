@@ -74,17 +74,60 @@ public class UserDAO implements DAO<User>{
     }
 
     @Override
-    public boolean save(User user) {
-        return false;
+    public boolean create(User user) {
+        try(Connection connection = DBCONNECTOR.getConnection()) {
+            String query = "INSERT INTO bankapp.user_data(name, surname, patronymic) VALUES (?,?,?,?)";
+            try(PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setString(1, user.getName());
+                statement.setString(2, user.getSurname());
+                statement.setString(3, user.getPatronymic());
+                statement.executeUpdate();
+                return true;
+            }
+        }catch (SQLException e){
+            return false;
+        }
     }
 
     @Override
     public boolean update(User user) {
+        if (checkIfExixtsById(user.getId())){
+            User olduser = this.get(user.getId()).get();
+            try (Connection connection = DBCONNECTOR.getConnection()){
+                String query = "UPDATE bankapp.user_data SET name=?, surname=?, patronymic=?";
+                try (PreparedStatement statement = connection.prepareStatement(query)){
+                    statement.setString(1, user.getName());
+                    statement.setString(2, user.getSurname());
+                    statement.setString(3, user.getPatronymic());
+                    statement.executeUpdate();
+                }
+
+            } catch (SQLException e){
+                return false;
+            }
+        }
         return false;
     }
 
     @Override
     public boolean delete(User user) {
-        return false;
+        if (checkIfExixtsById(user.getId())) {
+            try (Connection connection = DBCONNECTOR.getConnection()){
+                String query = "DELETE FROM bankapp.user_data WHERE id=?";
+                try(PreparedStatement statement = connection.prepareStatement(query)) {
+                    statement.setLong(1, user.getId());
+                    statement.executeUpdate();
+                    return true;
+                }
+            }catch (SQLException e){
+                return false;
+            }
+        }
+            return false;
+    }
+
+    private boolean checkIfExixtsById(Long id){
+        Optional<User> userOptional = this.get(id);
+        return userOptional.isPresent();
     }
 }
