@@ -1,8 +1,17 @@
 package com.clevertecbank.entity;
 
-import java.sql.Date;
+import lombok.*;
 
+import java.sql.Date;
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@ToString
+@EqualsAndHashCode
 public class Account {
+    @EqualsAndHashCode.Exclude
     private long id;
     private String account_number;
     private long bank_id;

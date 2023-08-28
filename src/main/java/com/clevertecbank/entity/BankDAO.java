@@ -116,7 +116,7 @@ public class BankDAO implements DAO<Bank>{
         Optional<Bank> bankOptional = this.get(id);
         return bankOptional.isPresent();
     }
-    public Optional<Bank> getbyName(String bank_name) {
+    public Optional<Bank> getByName(String bank_name) {
         try (Connection connection = DBCONNECTOR.getConnection()) {
             String query = "SELECT * FROM bankapp.bank WHERE bank_name = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -136,7 +136,7 @@ public class BankDAO implements DAO<Bank>{
         return Optional.empty();
     }
     private boolean checkIfExitsByBankName(String bank_name){
-        Optional<Bank> bankOptional = this.getbyName(bank_name);
+        Optional<Bank> bankOptional = this.getByName(bank_name);
         return bankOptional.isPresent();
     }
 
