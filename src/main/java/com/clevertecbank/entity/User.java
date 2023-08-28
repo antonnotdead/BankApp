@@ -11,7 +11,7 @@ import lombok.*;
 public class User {
     @EqualsAndHashCode.Exclude
     private long id;
-    private String name;
+    private String first_name;
     private String surname;
     private String patronymic;
 }

@@ -34,7 +34,7 @@ public class UserDAO implements DAO<User>{
                 try (ResultSet resultSet = statement.executeQuery()){
                     while (resultSet.next()){
                         User user = User.builder().id(resultSet.getLong("id"))
-                                .name(resultSet.getString("name"))
+                                .first_name(resultSet.getString("name"))
                                 .surname(resultSet.getString("surname"))
                                 .patronymic(resultSet.getString("patronymic"))
                                 .build();
@@ -58,7 +58,7 @@ public class UserDAO implements DAO<User>{
                 try (ResultSet resultSet = statement.executeQuery()){
                     while (resultSet.next()){
                         User user = User.builder().id(resultSet.getLong("id"))
-                                .name(resultSet.getString("name"))
+                                .first_name(resultSet.getString("name"))
                                 .surname(resultSet.getString("surname"))
                                 .patronymic(resultSet.getString("patronymic"))
                                 .build();
@@ -70,7 +70,7 @@ public class UserDAO implements DAO<User>{
         }catch (SQLException e){
             throw new RuntimeException(e);
         }
-        return null;
+        return userList;
     }
 
     @Override
@@ -78,7 +78,7 @@ public class UserDAO implements DAO<User>{
         try(Connection connection = DBCONNECTOR.getConnection()) {
             String query = "INSERT INTO bankapp.user_data(name, surname, patronymic) VALUES (?,?,?,?)";
             try(PreparedStatement statement = connection.prepareStatement(query)) {
-                statement.setString(1, user.getName());
+                statement.setString(1, user.getFirst_name());
                 statement.setString(2, user.getSurname());
                 statement.setString(3, user.getPatronymic());
                 statement.executeUpdate();
@@ -90,15 +90,15 @@ public class UserDAO implements DAO<User>{
     }
 
     @Override
-    public boolean update(User user) {
-        if (checkIfExixtsById(user.getId())){
-            User olduser = this.get(user.getId()).get();
+    public boolean update(User updatedUser) {
+        if (checkIfExitsById(updatedUser.getId())){
+            User olduser = this.get(updatedUser.getId()).get();
             try (Connection connection = DBCONNECTOR.getConnection()){
                 String query = "UPDATE bankapp.user_data SET name=?, surname=?, patronymic=?";
                 try (PreparedStatement statement = connection.prepareStatement(query)){
-                    statement.setString(1, user.getName());
-                    statement.setString(2, user.getSurname());
-                    statement.setString(3, user.getPatronymic());
+                    statement.setString(1, (updatedUser.getFirst_name() == null) ? olduser.getFirst_name() : updatedUser.getFirst_name());
+                    statement.setString(2, (updatedUser.getSurname()== null ? olduser.getFirst_name(): updatedUser.getSurname()));
+                    statement.setString(3, (updatedUser.getPatronymic() == null ? olduser.getPatronymic() : olduser.getPatronymic()));
                     statement.executeUpdate();
                 }
 
@@ -111,7 +111,7 @@ public class UserDAO implements DAO<User>{
 
     @Override
     public boolean delete(User user) {
-        if (checkIfExixtsById(user.getId())) {
+        if (checkIfExitsById(user.getId())) {
             try (Connection connection = DBCONNECTOR.getConnection()){
                 String query = "DELETE FROM bankapp.user_data WHERE id=?";
                 try(PreparedStatement statement = connection.prepareStatement(query)) {
@@ -126,8 +126,26 @@ public class UserDAO implements DAO<User>{
             return false;
     }
 
-    private boolean checkIfExixtsById(Long id){
+    public boolean deleteById(long id){
+        if (checkIfExitsById(id)){
+            return this.delete(get(id).get());
+        }else {
+            return false;
+        }
+    }
+
+    private boolean checkIfExitsById(Long id){
         Optional<User> userOptional = this.get(id);
         return userOptional.isPresent();
     }
 }
+/*
+try (Connection connection = DBCONNECTOR.getConnection()) {
+            String query = "";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                return true;
+            }
+        } catch (SQLException e) {
+            return false;
+        }
+*/

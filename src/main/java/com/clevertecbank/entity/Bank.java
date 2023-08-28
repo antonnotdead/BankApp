@@ -12,5 +12,5 @@ import lombok.*;
 public class Bank {
     @EqualsAndHashCode.Exclude
     private long id;
-    private String name;
+    private String bank_name;
 }
