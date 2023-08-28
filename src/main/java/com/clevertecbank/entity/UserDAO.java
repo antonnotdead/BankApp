@@ -94,7 +94,7 @@ public class UserDAO implements DAO<User>{
         if (checkIfExitsById(updatedUser.getId())){
             User olduser = this.get(updatedUser.getId()).get();
             try (Connection connection = DBCONNECTOR.getConnection()){
-                String query = "UPDATE bankapp.user_data SET name=?, surname=?, patronymic=?";
+                String query = "UPDATE bankapp.user_data SET first_name=?, surname=?, patronymic=?";
                 try (PreparedStatement statement = connection.prepareStatement(query)){
                     statement.setString(1, (updatedUser.getFirst_name() == null) ? olduser.getFirst_name() : updatedUser.getFirst_name());
                     statement.setString(2, (updatedUser.getSurname()== null ? olduser.getFirst_name(): updatedUser.getSurname()));

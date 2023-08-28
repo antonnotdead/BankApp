@@ -70,8 +70,17 @@ public class BankDAO implements DAO<Bank>{
     }
 
     @Override
-    public boolean update(Bank bank) {
-        if (checkIfExitsById(bank.getId())){
+    public boolean update(Bank updatedbank) {
+        if (checkIfExitsById(updatedbank.getId())){
+            Bank oldbank = this.get(updatedbank.getId()).get();
+            try (Connection connection = DBCONNECTOR.getConnection()) {
+                String query = "UPDATE bankapp.bank SET bank_name =?";
+                try (PreparedStatement statement = connection.prepareStatement(query)) {
+                    statement.setString(1, (updatedbank.getBank_name() == null) ? oldbank.getBank_name() : updatedbank.getBank_name());
+                }
+            } catch (SQLException e) {
+                return false;
+            }
 
         }
         return false;
@@ -79,11 +88,50 @@ public class BankDAO implements DAO<Bank>{
 
     @Override
     public boolean delete(Bank bank) {
+        if (checkIfExitsById(bank.getId())) {
+            try (Connection connection = DBCONNECTOR.getConnection()) {
+            String query = "DELETE FROM bankapp.bank WHERE  id =?";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setLong(1, bank.getId());
+                statement.executeUpdate();
+                return true;
+            }
+        } catch (SQLException e) {
+            return false;
+        }
+        }
+
         return false;
+    }
+    public boolean deleteById(long id){
+        if (checkIfExitsById(id)){
+            return this.delete(get(id).get());
+        }else {
+            return false;
+        }
     }
     private boolean checkIfExitsById(Long id){
         Optional<Bank> bankOptional = this.get(id);
         return bankOptional.isPresent();
+    }
+    public Optional<Bank> getbyName(String bank_name) {
+        try (Connection connection = DBCONNECTOR.getConnection()) {
+            String query = "SELECT * FROM bankapp.bank WHERE bank_name = ?";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setString(1, bank_name);
+                try (ResultSet resultSet = statement.executeQuery() ){
+                    while (resultSet.next()){
+                        Bank bank = Bank.builder().id(resultSet.getLong("id"))
+                                .bank_name(resultSet.getString("bank_name"))
+                                .build();
+                        return Optional.of(bank);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            return Optional.empty();
+        }
+        return Optional.empty();
     }
 //    private boolean checkIfExitsByBankName(String bank_name){
 //        Optional<Bank> bankOptional = this.g;
