@@ -76,7 +76,7 @@ public class UserDAO implements DAO<User>{
     @Override
     public boolean create(User user) {
         try(Connection connection = DBCONNECTOR.getConnection()) {
-            String query = "INSERT INTO bankapp.user_data(name, surname, patronymic) VALUES (?,?,?,?)";
+            String query = "INSERT INTO bankapp.user_data(first_name, surname, patronymic) VALUES (?,?,?)";
             try(PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, user.getFirst_name());
                 statement.setString(2, user.getSurname());

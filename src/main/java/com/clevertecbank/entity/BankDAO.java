@@ -56,7 +56,8 @@ public class BankDAO implements DAO<Bank>{
     }
 
     @Override
-    public boolean create(Bank bank) { //add check for bank_name
+    public boolean create(Bank bank) {
+        if (checkIfExitsByBankName(bank.getBank_name()))
         try (Connection connection = DBCONNECTOR.getConnection()) {
             String query = "INSERT INTO bankapp.bank(name) VALUES (?)";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -67,6 +68,7 @@ public class BankDAO implements DAO<Bank>{
         } catch (SQLException e) {
             return false;
         }
+        return false;
     }
 
     @Override
@@ -133,10 +135,10 @@ public class BankDAO implements DAO<Bank>{
         }
         return Optional.empty();
     }
-//    private boolean checkIfExitsByBankName(String bank_name){
-//        Optional<Bank> bankOptional = this.g;
-//        return bankOptional.isPresent();
-//    }
+    private boolean checkIfExitsByBankName(String bank_name){
+        Optional<Bank> bankOptional = this.getbyName(bank_name);
+        return bankOptional.isPresent();
+    }
 
 }
 
