@@ -104,6 +104,18 @@ public class CurrencyDAO implements DAO<Currency>{
 
     @Override
     public boolean delete(Currency currency) {
+        if (checkIfExitsById(currency.getId())) {
+            try (Connection connection = DBCONNECTOR.getConnection()){
+                String query = "DELETE FROM bankapp.currency WHERE id=?";
+                try(PreparedStatement statement = connection.prepareStatement(query)) {
+                    statement.setLong(1, currency.getId());
+                    statement.executeUpdate();
+                    return true;
+                }
+            }catch (SQLException e){
+                return false;
+            }
+        }
         return false;
     }
     private boolean checkIfExitsById(Long id){
