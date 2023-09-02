@@ -13,6 +13,19 @@ import java.util.Optional;
 public class BankDAO implements DAO<Bank>{
     private static BankDAO instance = null;
     private final DBconnector DBCONNECTOR = DBconnector.getInstance();
+
+    public static BankDAO getInstance() {
+        BankDAO localInstance = instance;
+        if (localInstance == null) {
+            synchronized (BankDAO.class) {
+                localInstance = instance;
+                if (localInstance == null) {
+                    instance = localInstance = new BankDAO();
+                }
+            }
+        }
+        return localInstance;
+    }
     @Override
     public Optional<Bank> get(long id) {
         try (Connection connection = DBCONNECTOR.getConnection()) {
