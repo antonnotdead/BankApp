@@ -91,7 +91,7 @@ public class UserDAO implements DAO<User>{
 
     @Override
     public boolean update(User updatedUser) {
-        if (checkIfExitsById(updatedUser.getId())){
+        if (checkIfExistsById(updatedUser.getId())){
             User olduser = this.get(updatedUser.getId()).get();
             try (Connection connection = DBCONNECTOR.getConnection()){
                 String query = "UPDATE bankapp.user_data SET first_name=?, surname=?, patronymic=?";
@@ -111,7 +111,7 @@ public class UserDAO implements DAO<User>{
 
     @Override
     public boolean delete(User user) {
-        if (checkIfExitsById(user.getId())) {
+        if (checkIfExistsById(user.getId())) {
             try (Connection connection = DBCONNECTOR.getConnection()){
                 String query = "DELETE FROM bankapp.user_data WHERE id=?";
                 try(PreparedStatement statement = connection.prepareStatement(query)) {
@@ -127,25 +127,15 @@ public class UserDAO implements DAO<User>{
     }
 
     public boolean deleteById(long id){
-        if (checkIfExitsById(id)){
+        if (checkIfExistsById(id)){
             return this.delete(get(id).get());
         }else {
             return false;
         }
     }
 
-    private boolean checkIfExitsById(Long id){
+    private boolean checkIfExistsById(Long id){
         Optional<User> userOptional = this.get(id);
         return userOptional.isPresent();
     }
 }
-/*
-try (Connection connection = DBCONNECTOR.getConnection()) {
-            String query = "";
-            try (PreparedStatement statement = connection.prepareStatement(query)) {
-                return true;
-            }
-        } catch (SQLException e) {
-            return false;
-        }
-*/

@@ -3,7 +3,7 @@ package com.clevertecbank.entity;
 import lombok.*;
 
 import java.sql.Timestamp;
-import java.util.Date;
+
 @Setter
 @Getter
 @NoArgsConstructor
@@ -16,6 +16,7 @@ public class Transaction {
     private long id;
     private long sender_id;
     private long receiver_id;
-    private int value;
+    private int transaction_value;
     private Timestamp date;
+    private Transaction_type type;
 }

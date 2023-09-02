@@ -80,7 +80,7 @@ public class AccountDAO implements DAO<Account> {
     public List<Account> getAll() {
         List<Account>  accountList = new ArrayList<>();
         try(Connection connection = DBCONNECTOR.getConnection()) {
-            String query = "SELECT * FROM bankapp.accpunt_data";
+            String query = "SELECT * FROM bankapp.account_data";
             try (PreparedStatement statement = connection.prepareStatement(query)){
                 try (ResultSet resultSet = statement.executeQuery()){
                     while (resultSet.next()){
@@ -122,10 +122,10 @@ public class AccountDAO implements DAO<Account> {
 
     @Override
     public boolean update(Account updatedAccount) {
-        if (checkIfExitsById(updatedAccount.getId())){
+        if (checkIfExistsById(updatedAccount.getId())){
             Account oldAccount = this.get(updatedAccount.getId()).get();
             try (Connection connection = DBCONNECTOR.getConnection()){
-                String query = "UPDATE bankapp.user_data SET first_name=?, surname=?, patronymic=?";
+                String query = "UPDATE bankapp.account_data SET first_name=?, surname=?, patronymic=?";
                 try (PreparedStatement statement = connection.prepareStatement(query)){
                     statement.setString(1, (updatedAccount.getAccount_number() == null) ? oldAccount.getAccount_number() : updatedAccount.getAccount_number());
                     statement.setLong(2, (updatedAccount.getBank_id() == 0) ? oldAccount.getBank_id() : updatedAccount.getBank_id());
@@ -144,7 +144,7 @@ public class AccountDAO implements DAO<Account> {
 
     @Override
     public boolean delete(Account account) {
-        if (checkIfExitsById(account.getId())) {
+        if (checkIfExistsById(account.getId())) {
             try (Connection connection = DBCONNECTOR.getConnection()){
                 String query = "DELETE FROM bankapp.account_data WHERE id=?";
                 try(PreparedStatement statement = connection.prepareStatement(query)) {
@@ -158,11 +158,11 @@ public class AccountDAO implements DAO<Account> {
         }
         return false;
     }
-    private boolean checkIfExitsById(Long id){
+    private boolean checkIfExistsById(Long id){
         Optional<Account> accountOptional = this.get(id);
         return accountOptional.isPresent();
     }
-    private boolean checkIfExitsByBankName(String bank_name){
+    private boolean checkIfExistsByBankName(String bank_name){
         Optional<Account> bankOptional = this.getByName(bank_name);
         return bankOptional.isPresent();
     }
