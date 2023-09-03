@@ -2,6 +2,7 @@ package com.clevertecbank.transfer;
 
 import com.clevertecbank.entity.*;
 
+import java.sql.Timestamp;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -10,9 +11,27 @@ public class Transfer {
     private static final TransactionDAO transactionDAO = TransactionDAO.getInstance();
 
     public void doMoneyTransfer(Account currentAcc){
-        Transaction newTransaction = new Transaction();
-        newTransaction = this.chooseTransType(currentAcc);
-
+        Scanner scanner = new Scanner(System.in);
+        Transaction CreatedTransaction = new Transaction();
+        CreatedTransaction = this.chooseTransType(currentAcc);
+        System.out.println("Enter money value:");
+        switch (CreatedTransaction.getType()) {
+            case TRANSFER, WITHDRAW -> {
+            while (true) {
+                double money = scanner.nextDouble();
+                if (checkIfAccHaveEnoughMoney(money, currentAcc)) {
+                    System.out.println("You have no enough money! Try again!");
+                }
+                else {
+                    CreatedTransaction.setTransaction_value(money);
+                    break;
+                }
+            }
+        }
+            case DEPOSIT -> CreatedTransaction.setTransaction_value(scanner.nextDouble());
+        }
+        CreatedTransaction.setDate(new Timestamp(System.currentTimeMillis()));
+        transactionDAO.create(CreatedTransaction);
     }
     private Transaction chooseTransType (Account currentAcc){
         Transaction transaction = new Transaction();
@@ -59,5 +78,8 @@ public class Transfer {
                 return receiver.getId();
             }
         }
+    }
+    private boolean checkIfAccHaveEnoughMoney(double money,Account currentAcc){
+        return !(money >= currentAcc.getMoneyValue());
     }
 }

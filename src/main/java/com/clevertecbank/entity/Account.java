@@ -18,5 +18,5 @@ public class Account {
     private long user_id;
     private long currency_id;
     private Date creation_date;
-    private double monaey_value;
+    private double moneyValue;
 }

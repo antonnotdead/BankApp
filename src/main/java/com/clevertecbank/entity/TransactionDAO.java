@@ -40,7 +40,7 @@ public class TransactionDAO implements DAO<Transaction> {
                         Transaction transaction = Transaction.builder().id(resultSet.getLong("id"))
                                 .receiver_id(resultSet.getLong("receiver_id"))
                                 .sender_id(resultSet.getLong("sender_id"))
-                                .transaction_value(resultSet.getInt("money_value"))
+                                .transaction_value(resultSet.getDouble("money_value"))
                                 .date(resultSet.getTimestamp("date"))
                                 .type(Transaction_type.valueOf(resultSet.getString("transaction_type")))
                                 .build();
@@ -66,7 +66,7 @@ public class TransactionDAO implements DAO<Transaction> {
                             Transaction transaction = Transaction.builder().id(resultSet.getLong("id"))
                                     .receiver_id(resultSet.getLong("receiver_id"))
                                     .sender_id(resultSet.getLong("sender_id"))
-                                    .transaction_value(resultSet.getInt("money_value"))
+                                    .transaction_value(resultSet.getDouble("money_value"))
                                     .date(resultSet.getTimestamp("date"))
                                     .type(Transaction_type.valueOf(resultSet.getString("transaction_type")))
                                     .build();
