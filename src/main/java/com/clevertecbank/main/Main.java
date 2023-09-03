@@ -6,6 +6,9 @@ import com.clevertecbank.entity.CurrencyDAO;
 import com.clevertecbank.entity.TransactionDAO;
 import com.clevertecbank.entity.UserDAO;
 import com.clevertecbank.interestcalc.InterestCalculationThread;
+
+import java.util.Scanner;
+
 public class Main {
     private static final UserDAO userDAO = UserDAO.getInstance();
     private static final AccountDAO accountDAO = AccountDAO.getInstance();
