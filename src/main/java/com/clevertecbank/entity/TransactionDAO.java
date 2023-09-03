@@ -17,7 +17,6 @@ public class TransactionDAO implements DAO<Transaction> {
     public static TransactionDAO getInstance() {
         TransactionDAO localInstance = instance;
         if (localInstance == null) {
-            Class var1 = TransactionDAO.class;
             synchronized (TransactionDAO.class) {
                 localInstance = instance;
                 if (localInstance == null) {
@@ -40,8 +39,8 @@ public class TransactionDAO implements DAO<Transaction> {
                         Transaction transaction = Transaction.builder().id(resultSet.getLong("id"))
                                 .receiver_id(resultSet.getLong("receiver_id"))
                                 .sender_id(resultSet.getLong("sender_id"))
-                                .transaction_value(resultSet.getDouble("money_value"))
-                                .date(resultSet.getTimestamp("date"))
+                                .transaction_value(resultSet.getInt("transaction_value"))
+                                .date(resultSet.getTimestamp("transaction_date"))
                                 .type(Transaction_type.valueOf(resultSet.getString("transaction_type")))
                                 .build();
                         return Optional.of(transaction);
@@ -66,7 +65,7 @@ public class TransactionDAO implements DAO<Transaction> {
                             Transaction transaction = Transaction.builder().id(resultSet.getLong("id"))
                                     .receiver_id(resultSet.getLong("receiver_id"))
                                     .sender_id(resultSet.getLong("sender_id"))
-                                    .transaction_value(resultSet.getDouble("money_value"))
+                                    .transaction_value(resultSet.getInt("money_value"))
                                     .date(resultSet.getTimestamp("date"))
                                     .type(Transaction_type.valueOf(resultSet.getString("transaction_type")))
                                     .build();

@@ -3,6 +3,7 @@ package com.clevertecbank.transfer;
 import com.clevertecbank.entity.*;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -11,6 +12,7 @@ public class Transfer {
     private static final TransactionDAO transactionDAO = TransactionDAO.getInstance();
 
     public void doMoneyTransfer(Account currentAcc){
+        Date date = new Date();
         Scanner scanner = new Scanner(System.in);
         Transaction CreatedTransaction = new Transaction();
         CreatedTransaction = this.chooseTransType(currentAcc);
@@ -30,7 +32,7 @@ public class Transfer {
         }
             case DEPOSIT -> CreatedTransaction.setTransaction_value(scanner.nextDouble());
         }
-        CreatedTransaction.setDate(new Timestamp(System.currentTimeMillis()));
+        CreatedTransaction.setDate(new Timestamp(date.getTime()));
         transactionDAO.create(CreatedTransaction);
     }
     private Transaction chooseTransType (Account currentAcc){

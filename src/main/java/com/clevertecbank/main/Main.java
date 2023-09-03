@@ -19,9 +19,9 @@ public class Main {
     public Main() {
     }
 
-    public static void main(String[] args) {
-        InterestCalculationThread interest = new InterestCalculationThread();
-        Thread threadInterest = new Thread(interest);
-        threadInterest.start();
-    }
+//    public static void main(String[] args) {
+//        InterestCalculationThread interest = new InterestCalculationThread();
+//        Thread threadInterest = new Thread(interest);
+//        threadInterest.start();
+//    }
 }
